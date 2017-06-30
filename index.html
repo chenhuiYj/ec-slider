@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app1"></div>
+<div id="app2">
+    <p>{{name}}</p>
+    <input v-model="name" type="text"/>
+</div>
+<div id="app6" style="width: 400px;height: 200px;margin: 0 auto;">
+    <!--<tab></tab>-->
+    <!--<router-link to="/con1">Go to con1</router-link>-->
+    <!--<router-link to="/con2">Go to con2</router-link>-->
+    <!--<router-link to="/con3">Go to con3</router-link>-->
+    <!--<router-view></router-view>-->
+    <!--<div :class="{'active':isTrue[0]}"></div>-->
+    <!--http://i2.kiimg.com/1949/098c291e8db16ab5.jpg          http://i1.buimg.com/1949/4d860a3067fab23b.jpg-->
+    <ecSlide :list='list' :autoplay="true" :type="'slide'" :option="true" :time="4000" :sildetype="'ease'" :arrowurl="'http://i2.kiimg.com/1949/098c291e8db16ab5.jpg '" :arrowsize="'40,20'" :direction="'top'"></ecSlide>
+</div>
+<div id="app" class="main">
+    <h2>学习小目标列表</h2>
+    <div class="list">
+        <h3>添加小目标</h3>
+        <input type="text" class="text1" placeholder="输入小目标后，按回车确认" @keyup.13='addList' v-model="addText"/>
+        <p>共有{{list.length}}个目标，{{tips}}</p>
+        <p>
+            <input type="radio" name="chooseType" @click='chooseList()' checked="true"/><label>所有目标</label>
+            <input type="radio" name="chooseType" @click='chooseList(1)'/><label>已完成目标</label>
+            <input type="radio" name="chooseType" @click='chooseList(2)'/><label>未完成目标</label>
+        </p>
+    </div>
+    <ul>
+        <li v-for="list1 in useList" class="li1" :class="{end: list1.type,eidting: edit===list1}">
+            <div>
+                <span @click="list1.type=!list1.type" class="type-span"></span>
+                <span @dblclick="edit=list1">{{list1.name}}</span>
+                <span class="close" @click='delectList(list1)'>X</span>
+            </div>
+            <input type="text" class="text2" v-model='list1.name' @keyup.esc='cancelEdit(list1)' @blur='edited' @focus='editBefore(list1.name)' @keyup.enter='edited' v-focus/>
+        </li>
+    </ul>
+</div>
+</body>
+</html>

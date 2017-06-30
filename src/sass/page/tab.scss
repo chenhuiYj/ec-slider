@@ -1,0 +1,24 @@
+body,ul ,li,div{margin: 0;padding: 0;}
+.tab-box {
+  width: 600px;
+  margin: 0 auto;
+  li{
+    text-align: center;
+    border-bottom: 1px solid #09f;
+    float: left;
+    width: 25%;
+    height: 40px;
+    line-height: 40px;
+    padding: 0;
+    cursor: pointer;
+    &:hover{
+      border-bottom: 1px solid #f00;
+    }
+  }
+  .tab-con{
+    height: 100px;
+    line-height: 100px;
+    text-align: center;
+    font-size: 26px;
+  }
+}
