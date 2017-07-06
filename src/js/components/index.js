@@ -1,11 +1,11 @@
 /**
  * Created by SEELE on 2017/6/30.
  */
-import SlideImg from './ecslide.vue'
+import SlideImg from './ec-slider.vue'
 
-const ecSlide={
+const ecslide={
     install:function (Vue) {
-        Vue.component('ecslide',SlideImg)
+        Vue.component('ec-slide',SlideImg)
     }
 }
-export default ecSlide;
+export default ecslide;

@@ -1,8 +1,8 @@
 require("./index.html");
 require("./src/sass/index.scss");
 import Vue from 'vue'
-import ecSlide from './src/js/components/index';
-Vue.use(ecSlide);
+import ecslide from './src/js/components/index';
+Vue.use(ecslide);
 let app6 = new Vue({
     el: "#app6",
     data: {
