@@ -1,37 +1,51 @@
 <template>
-    <div class="switch-img-box">
-        <div class="switch-img-type switch-img-left" v-if="type==='slide'&&direction==='left'">
+    <div class="switch-img-box" id="ec-slide-box">
+        <div class="switch-img-type switch-img-left" v-if="type==='slide'&&direction==='left'" @touchstart="touchStar" @touchend="touchEnd">
             <ul :style="{'width':ulWidth,'transform':'translate3d(-'+(listWidth*(nowIndex+1))+'%,0,0)','transition-timing-function':slideChange}"
                 :class="{'tran':noLast}">
                 <li :style="{'width':listWidth+'%'}">
-                    <img :src="list[list.length-1].src" @click.stop="switchDo"/>
+                    <a :href="list[list.length-1].href?list[list.length-1].href:'javascript:;'">
+                        <img :src="list[list.length-1].src" class="slider-img"/>
+                    </a>
                 </li>
-                <li v-for="(li,index) in list" @click.stop="switchDo" :style="{'width':listWidth+'%'}">
-                    <img :src="li.src"/>
+                <li v-for="(li,index) in list":style="{'width':listWidth+'%'}">
+                    <a :href="li.href?li.href:'javascript:;'">
+                    <img :src="li.src" class="slider-img"/>
+                    </a>
                 </li>
                 <li :style="{'width':listWidth+'%'}">
-                    <img :src="list[0].src" @click.stop="switchDo"/>
+                    <a :href="list[0].href?list[0].href:'javascript:;'">
+                        <img :src="list[0].src" class="slider-img"/>
+                    </a>
                 </li>
             </ul>
         </div>
-        <div class="switch-img-type switch-img-top" v-if="type==='slide'&&direction==='top'">
+        <div class="switch-img-type switch-img-top" v-if="type==='slide'&&direction==='top'" @touchstart="touchStar" @touchend="touchEnd" :style="{'height':boxHeight}">
             <ul :style="{'transform':'translate3d(0,-'+(listWidth*(nowIndex+1))+'%,0)','transition-timing-function':slideChange}"
                 :class="{'tran':noLast}">
                 <li>
-                    <img :src="list[list.length-1].src" @click.stop="switchDo"/>
+                    <a :href="list[list.length-1].href?list[list.length-1].href:'javascript:;'">
+                        <img :src="list[list.length-1].src" class="slider-img" @load="imgLoad"/>
+                    </a>
                 </li>
-                <li v-for="(li,index) in list" @click.stop="switchDo">
-                    <img :src="li.src"/>
+                <li v-for="(li,index) in list">
+                    <a :href="li.href?li.href:'javascript:;'">
+                        <img :src="li.src" class="slider-img" @load="imgLoad"/>
+                    </a>
                 </li>
                 <li>
-                    <img :src="list[0].src" @click.stop="switchDo"/>
+                    <a :href="list[0].href?list[0].href:'javascript:;'">
+                        <img :src="list[0].src" class="slider-img" @load="imgLoad"/>
+                    </a>
                 </li>
             </ul>
         </div>
-        <div class="switch-img-type switch-img-transparent" v-if="type==='transparent'">
+        <div class="switch-img-type switch-img-transparent" v-if="type==='transparent'" @touchstart="touchStar" @touchend="touchEnd">
             <ul>
-                <li v-for="(li,index) in list" @click.stop="switchDo" :class="{'cur':index===nowIndex}">
-                    <img :src="li.src" width="100%" height="100%"/>
+                <li v-for="(li,index) in list" :class="{'cur':index===nowIndex,'show':index===nowIndexShow}">
+                    <a :href="li.href?li.href:'javascript:;'">
+                        <img :src="li.src" class="slider-img"/>
+                    </a>
                 </li>
             </ul>
         </div>
@@ -42,22 +56,26 @@
                 <span class="active" v-if="nowIndex===-1"></span>
             </div>
         </div>
-        <div class="switch-arrow" v-if="arrowurl">
+        <div class="switch-arrow" v-if="arrowurl&&arrowsize">
             <div :class="{'arrow-left':direction==='left','arrow-top':direction==='top'}" :style="{'width':arrowWidth+'px','height':arrowHeight+'px','background':'url('+arrowurl+') no-repeat','background-size':'100%'}" @click.stop="switchDo('reduce')"></div>
             <div :class="{'arrow-right':direction==='left','arrow-bottom':direction==='top'}" :style="{'width':arrowWidth+'px','height':arrowHeight+'px','background':'url('+arrowurl+') no-repeat','background-size':'100%'}"  @click.stop="switchDo"></div>
         </div>
     </div>
 </template>
-<script>
+<script type="text/javascript">
     export default {
         data () {
             return {
                 nowIndex: 0,
+                nowIndexShow:0,
                 noLast: true,
                 timer: null,
                 slideChange: '',
                 arrowWidth:'',
-                arrowHeight:''
+                arrowHeight:'',
+                startX:0,
+                startY:0,
+                boxHeight:''
             }
         },
         computed: {
@@ -74,13 +92,37 @@
                 this.autoSwitch();
             }
             this.slideChange = this.sildetype || 'ease';
-            this.arrowWidth=this.arrowsize.split(',')[0];
-            this.arrowHeight=this.arrowsize.split(',')[1];
+            if(this.arrowsize&&this.arrowurl){
+                this.arrowWidth=this.arrowsize.split(',')[0];
+                this.arrowHeight=this.arrowsize.split(',')[1];
+            }
         },
         props: ['list', 'autoplay', 'type', 'time', 'sildetype', 'arrowurl','arrowsize','option','direction'],
         methods: {
-            testFn(){
-              alert("asda");
+            //开始滑动
+            touchStar(e){
+                //e.preventDefault();
+                this.startX=e.changedTouches[0].clientX;
+                this.startY=e.changedTouches[0].clientY;
+            },
+            touchEnd(e){
+                //e.preventDefault();
+                if(this.direction==='left'){
+                    if(e.changedTouches[0].clientX-this.startX>50){
+                        this.switchDo('reduce')
+                    }
+                    else if(e.changedTouches[0].clientX-this.startX<-50){
+                        this.switchDo()
+                    }
+                }
+                else if(this.direction==='top'){
+                    if(e.changedTouches[0].clientY-this.startY>50){
+                        this.switchDo('reduce')
+                    }
+                    else if(e.changedTouches[0].clientY-this.startY<-50){
+                        this.switchDo()
+                    }
+                }
             },
             //滑动操作
             switchDo(reduce){
@@ -116,18 +158,26 @@
                         this.nowIndex = 0;
                     }
                 }
+                setTimeout(()=>{
+                    this.nowIndexShow=this.nowIndex;
+                },1)
                 if (this.autoplay) {
                     this.autoSwitch();
                 }
                 if(this.type==='slide') {
                     this.noLast = true;
                 }
+
             },
             autoSwitch(){
                 let time = this.time || 4000;
                 this.timer = setInterval(() => {
                     this.switchDo();
                 }, time);
+            },
+            imgLoad(e){
+                this.boxHeight=e.path[0].offsetHeight+'px';
+                console.log(this.boxHeight)
             }
         }
     }
@@ -137,6 +187,7 @@
         width: 100%;
         height: 100%;
         position: relative;
+        touch-action: none;
     }
     .switch-img-type{
         position: relative;
@@ -144,7 +195,6 @@
         width: 100%;
         height: 100%;
         &.switch-img-top{
-
         }
         &.switch-img-left{
             li {
@@ -154,13 +204,13 @@
         }
         &.switch-img-transparent {
             li {
-                position: absolute;
-                width: 100%;
-                height: 100%;
                 opacity: 0;
                 transition: opacity 1s;
+                width: 0;
                 &.cur {
-                    z-index: 1;
+                    width: auto;
+                }
+                &.show{
                     opacity: 1;
                 }
             }
@@ -170,9 +220,14 @@
             &.tran {
                 transition: all .4s;
             }
+            li{
+                text-align: center;
+            }
+
             img {
-                width: 100%;
-                height: 100%;
+                vertical-align: middle;
+                max-width: 100%;
+                max-height: 100%;
             }
         }
     }
@@ -243,6 +298,8 @@
             height: 100%;
             top: 0;
             right: 10px;
+            margin: auto;
+            bottom: 0;
             span{
                 margin:5px 0;
             }

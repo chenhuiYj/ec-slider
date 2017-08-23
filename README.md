@@ -25,7 +25,7 @@
     <ec-slide :list='list' :autoplay="true" :type="'slide'" :option="true" :time="4000" :sildetype="'ease'" :arrowurl="'http://i2.kiimg.com/1949/098c291e8db16ab5.jpg '" :arrowsize="'40,20'" :direction="'top'"></ec-slide>
 
 ### 配置说明
-* list-图片列表  Array  [{src:'url'},{src:'url'}]
+* list-图片列表  Array  [{src:'url',href:'https://www.baidu.com'},{src:'url',href:'https://www.baidu.com'}]
 * autoplay-是否自动播放  布尔                       default  false
 * type-轮播方式    string ‘transparent’ 'slide'    default   slide
 * option-对应点  布尔                              default   false
