@@ -105,6 +105,7 @@
                 this.startX=e.changedTouches[0].clientX;
                 this.startY=e.changedTouches[0].clientY;
             },
+            //滑动结束
             touchEnd(e){
                 //e.preventDefault();
                 if(this.direction==='left'){
