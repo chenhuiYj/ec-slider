@@ -10,6 +10,7 @@
         }
         .transparent-left{
             margin-bottom: 20px;
+            max-width: 500px;
         }
         .transparent-top{
             max-width: 1000px;
@@ -21,16 +22,17 @@
             margin: 20px auto;
             max-width: 1000px;
         }
+        .slider-top{
+            max-width: 1000px;
+        }
+        .slider-one{
+            margin: 20px auto;
+            max-width: 500px;
+        }
     </style>
 </head>
 <body>
 <div id="app6">
-    <!--<tab></tab>-->
-    <!--<router-link to="/con1">Go to con1</router-link>-->
-    <!--<router-link to="/con2">Go to con2</router-link>-->
-    <!--<router-link to="/con3">Go to con3</router-link>-->
-    <!--<router-view></router-view>-->
-    <!--<div :class="{'active':isTrue[0]}"></div>-->
     <!--http://i2.kiimg.com/1949/098c291e8db16ab5.jpg          http://i1.buimg.com/1949/4d860a3067fab23b.jpg-->
     <div class="transparent-top">
         <ec-slide :list='list' :autoplay="true" :type="'transparent'" :option="true" :time="4000" :sildetype="'ease'" :arrowurl="'http://i2.kiimg.com/1949/098c291e8db16ab5.jpg'" :arrowsize="'40,20'" :direction="'top'"></ec-slide>
@@ -43,6 +45,9 @@
     </div>
     <div class="slider-top">
         <ec-slide :list='list' :autoplay="true" :type="'slide'" :option="true" :time="4000" :sildetype="'ease'" :arrowurl="'http://i2.kiimg.com/1949/098c291e8db16ab5.jpg'" :arrowsize="'40,20'" :direction="'top'"></ec-slide>
+    </div>
+    <div class="slider-one">
+        <ec-slide :list='list2'></ec-slide>
     </div>
 </div>
 </body>

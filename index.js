@@ -24,6 +24,12 @@ let app6 = new Vue({
             {
                 src: "http://i2.kiimg.com/1949/2a7d10e224cfaa8e.jpg",
             }
+        ],
+        list2: [
+            {
+                src: 'http://i2.kiimg.com/1949/dc149abbf35fe1f3.jpg',
+                href:'https://www.baidu.com'
+            }
         ]
     },
     mounted(){

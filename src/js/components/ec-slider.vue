@@ -1,18 +1,29 @@
 <template>
-    <div class="switch-img-box" id="ec-slide-box">
-        <div class="switch-img-type switch-img-left" v-if="type==='slide'&&direction==='left'" @touchstart="touchStar" @touchend="touchEnd">
+    <div class="ec-slide-img-box" id="ec-slide-box">
+        <!--只有一张图片的时候，只显示，不做任何操作-->
+        <div class="ec-slide-img" v-if="list.length===1">
+            <a :href="list[0].href?list[0].href:'javascript:;'">
+                <img :src="list[0].src"/>
+            </a>
+        </div>
+        <!--左右滑动方式-->
+        <div class="ec-slide-img-type ec-slide-img-left" v-if="type==='slide'&&direction==='left'&&list.length>1">
+            <!--用tran这个class控制ul是否含有过渡效果，样式已经写好-->
             <ul :style="{'width':ulWidth,'transform':'translate3d(-'+(listWidth*(nowIndex+1))+'%,0,0)','transition-timing-function':slideChange}"
-                :class="{'tran':noLast}">
+                :class="{'tran':noLast}" @touchstart="touchStar" @touchend="touchEnd">
+                <!--最后一张图片-->
                 <li :style="{'width':listWidth+'%'}">
                     <a :href="list[list.length-1].href?list[list.length-1].href:'javascript:;'">
                         <img :src="list[list.length-1].src" class="slider-img"/>
                     </a>
                 </li>
+                <!--遍历出来的图片-->
                 <li v-for="(li,index) in list":style="{'width':listWidth+'%'}">
                     <a :href="li.href?li.href:'javascript:;'">
-                    <img :src="li.src" class="slider-img"/>
+                        <img :src="li.src" class="slider-img"/>
                     </a>
                 </li>
+                <!--第一张图片-->
                 <li :style="{'width':listWidth+'%'}">
                     <a :href="list[0].href?list[0].href:'javascript:;'">
                         <img :src="list[0].src" class="slider-img"/>
@@ -20,9 +31,10 @@
                 </li>
             </ul>
         </div>
-        <div class="switch-img-type switch-img-top" v-if="type==='slide'&&direction==='top'" @touchstart="touchStar" @touchend="touchEnd" :style="{'height':boxHeight}">
+        <!--上下滑动方式-->
+        <div class="ec-slide-img-type ec-slide-img-top" v-if="type==='slide'&&direction==='top'&&list.length>1" :style="{'height':boxHeight}">
             <ul :style="{'transform':'translate3d(0,-'+(listWidth*(nowIndex+1))+'%,0)','transition-timing-function':slideChange}"
-                :class="{'tran':noLast}">
+                :class="{'tran':noLast}" @touchstart="touchStar" @touchend="touchEnd">
                 <li>
                     <a :href="list[list.length-1].href?list[list.length-1].href:'javascript:;'">
                         <img :src="list[list.length-1].src" class="slider-img" @load="imgLoad"/>
@@ -40,8 +52,9 @@
                 </li>
             </ul>
         </div>
-        <div class="switch-img-type switch-img-transparent" v-if="type==='transparent'" @touchstart="touchStar" @touchend="touchEnd">
-            <ul>
+        <!--透明度滑动方式-->
+        <div class="ec-slide-img-type ec-slide-img-transparent" v-if="type==='transparent'&&list.length>1">
+            <ul @touchstart="touchStar" @touchend="touchEnd">
                 <li v-for="(li,index) in list" :class="{'cur':index===nowIndex,'show':index===nowIndexShow}">
                     <a :href="li.href?li.href:'javascript:;'">
                         <img :src="li.src" class="slider-img"/>
@@ -49,14 +62,15 @@
                 </li>
             </ul>
         </div>
-        <div class="switch-option" v-if="option" :class="{'nolast':nowIndex===list.length, 'isFirst':nowIndex===-1,'switch-option-top':direction==='top'}">
+        <!--isLast:隐藏最后一个span，isFirst隐藏第一个span-->
+        <div class="ec-slide-option" v-if="option&&list.length>1" :class="{'isLast':nowIndex===list.length, 'isFirst':nowIndex===-1,'ec-slide-option-top':direction==='top'}">
             <div>
-                <span class="active" v-if="nowIndex===list.length"></span>
+                <span class="active span1" v-if="nowIndex===list.length"></span>
                 <span v-for="(li,index) in list" :class="{'active':index===nowIndex}"></span>
-                <span class="active" v-if="nowIndex===-1"></span>
+                <span class="active span2" v-if="nowIndex===-1"></span>
             </div>
         </div>
-        <div class="switch-arrow" v-if="arrowurl&&arrowsize">
+        <div class="ec-slide-arrow" v-if="arrowurl&&arrowsize&&list.length>1">
             <div :class="{'arrow-left':direction==='left','arrow-top':direction==='top'}" :style="{'width':arrowWidth+'px','height':arrowHeight+'px','background':'url('+arrowurl+') no-repeat','background-size':'100%'}" @click.stop="switchDo('reduce')"></div>
             <div :class="{'arrow-right':direction==='left','arrow-bottom':direction==='top'}" :style="{'width':arrowWidth+'px','height':arrowHeight+'px','background':'url('+arrowurl+') no-repeat','background-size':'100%'}"  @click.stop="switchDo"></div>
         </div>
@@ -75,7 +89,7 @@
                 arrowHeight:'',
                 startX:0,
                 startY:0,
-                boxHeight:''
+                boxHeight:0
             }
         },
         computed: {
@@ -128,10 +142,13 @@
             //滑动操作
             switchDo(reduce){
                 clearInterval(this.timer);
+                //根据reduce判断this.nowIndex的增加或者减少！
                 if(reduce==='reduce'){
                     if(this.nowIndex===0){
+                        //如果是滑动切换
                         if(this.type==='slide'){
                             this.nowIndex--;
+                            //执行完了这次动画之后，去除过渡效果
                             setTimeout(() => {
                                 this.nowIndex = this.list.length-1;
                                 this.noLast = false;
@@ -150,6 +167,7 @@
                 }
                 if (this.nowIndex === this.list.length) {
                     if(this.type==='slide') {
+                        //执行完了这次动画之后，去除过渡效果
                         setTimeout(() => {
                             this.nowIndex = 0;
                             this.noLast = false;
@@ -159,51 +177,65 @@
                         this.nowIndex = 0;
                     }
                 }
+                //是否显示图片，只针对透明度切换的情况！
                 setTimeout(()=>{
                     this.nowIndexShow=this.nowIndex;
                 },1)
+                //如果需要自动播放
                 if (this.autoplay) {
                     this.autoSwitch();
                 }
+                //如果是滑动切换，设置this.noLast，增加过渡效果
                 if(this.type==='slide') {
                     this.noLast = true;
                 }
 
             },
+            //自动播放函数
             autoSwitch(){
                 let time = this.time || 4000;
                 this.timer = setInterval(() => {
                     this.switchDo();
                 }, time);
             },
+            //获取最大的高度，针对上下方向，滑动切换方式的处理
             imgLoad(e){
-                this.boxHeight=e.path[0].offsetHeight+'px';
-                console.log(this.boxHeight)
+                if(parseInt(this.boxHeight)<e.path[0].offsetHeight){
+                    this.boxHeight=e.path[0].offsetHeight+'px';
+                }
             }
         }
     }
 </script>
 <style lang="scss">
-    .switch-img-box {
+    .ec-slide-img-box {
         width: 100%;
         height: 100%;
         position: relative;
         touch-action: none;
     }
-    .switch-img-type{
+    .ec-slide-img{
+        width: 100%;
+        height: 100%;
+        img{
+            max-width: 100%;
+            max-height: 100%;
+        }
+    }
+    .ec-slide-img-type{
         position: relative;
         overflow: hidden;
         width: 100%;
         height: 100%;
-        &.switch-img-top{
+        &.ec-slide-img-top{
         }
-        &.switch-img-left{
+        &.ec-slide-img-left{
             li {
                 display: inline-block;
                 font-size: 0;
             }
         }
-        &.switch-img-transparent {
+        &.ec-slide-img-transparent {
             li {
                 opacity: 0;
                 transition: opacity 1s;
@@ -232,7 +264,7 @@
             }
         }
     }
-    .switch-arrow {
+    .ec-slide-arrow {
         div {
             position: absolute;
             z-index: 2;
@@ -265,7 +297,7 @@
             }
         }
     }
-    .switch-option {
+    .ec-slide-option {
         position: absolute;
         font-size: 0;
         bottom: 10px;
@@ -277,7 +309,7 @@
                 display: none;
             }
         }
-        &.nolast {
+        &.isLast {
             span:last-child {
                 display: none;
             }
@@ -293,7 +325,7 @@
                 background: #09f;
             }
         }
-        &.switch-option-top{
+        &.ec-slide-option-top{
             display: table;
             width: 10px;
             height: 100%;
