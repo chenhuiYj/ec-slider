@@ -35,6 +35,9 @@
 * arrowsize-箭头尺寸 string   ‘width,height’
 * direction-切换方向  string   'left' 'top'         default   left
 
+## LICENSE
+MIT
+
 
 
 
