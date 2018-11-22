@@ -1,4 +1,4 @@
-require("./index.html");
+//require("./index.html");
 require("./src/sass/index.scss");
 require("./fontSize");
 import Vue from 'vue'
@@ -7,6 +7,8 @@ import ecslide from './src/js/components/index';
 Vue.use(ecslide);
 Vue.use(ecDialog);
 //let img=require('/dist/images/img1.jpg');
+require("./index.html");
+let imgUrl = [require('./src/images/img1.jpg'),require('./src/images/img2.jpg'),require('./src/images/img3.jpg')];
 let app6 = new Vue({
     el: "#app6",
     data: {
@@ -14,24 +16,24 @@ let app6 = new Vue({
         isTrue: [false],
         list: [
             {
-                src: 'http://thyrsi.com/t6/613/1542871409x2890211738.jpg',
+                src: imgUrl[0],
                 href:'https://www.baidu.com'
             },
             {
-                src: "http://thyrsi.com/t6/613/1542871429x2890211738.jpg",
+                src: imgUrl[1],
                 href:'https://www.baidu.com'
             },
             {
-                src: "http://thyrsi.com/t6/613/1542871442x2890211738.jpg",
+                src: imgUrl[2],
                 href:'https://www.baidu.com'
             },
             {
-                src: "http://thyrsi.com/t6/613/1542871463x2890211738.jpg",
+                src: imgUrl[2],
             }
         ],
         list2: [
             {
-                src: 'http://thyrsi.com/t6/613/1542871429x2890211738.jpg',
+                src: '/dist/images/img1.jpg',
                 href:'https://www.baidu.com'
             }
         ]
@@ -44,5 +46,4 @@ let app6 = new Vue({
     }
 
 });
-
 

@@ -40,17 +40,30 @@ module.exports = {
                     plugins: ['syntax-dynamic-import']
                 }
             },
+            // {
+            //     test: /\.html$/,
+            //     loader: 'html-loader',
+            //     options: {
+            //         // 除了img的src,还可以继续配置处理更多html引入的资源
+            //         attrs: ['img:src']
+            //     }
+            // },
+            // {
+            //     test: /\.html$/,
+            //     loader:'html-loader'
+            // },
             {
                 test: /\.scss$/,
                 loader: 'style-loader!css-loader!sass-loader'
             },
             {
                 test: /\.(gif|jpg|png|woff|svg|eot|ttf)\??.*$/,
-                loader: 'url-loader?limit=8192&name=images/[hash:8].[name].[ext]'
-            },
-            {
-                test: /\.(gif|jpg|png|woff|svg|eot|ttf)\??.*$/,
-                loader: "file-loader?name=images/[hash:8].[name].[ext]"
+                loader:'url-loader',
+                options:{
+                    limit:8192,
+                    name:'images/[name].[ext]'
+                },
+                //loader: 'url-loader?limit=8192&name=images/[hash:8].[name].[ext]'
             }
         ]
     },
