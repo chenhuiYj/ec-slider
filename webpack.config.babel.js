@@ -1,6 +1,6 @@
 let webpack = require('webpack');
 let path = require("path");
-let serverHost = getIPAdress();;
+let serverHost = getIPAdress();
 let HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
     entry: {
@@ -23,10 +23,10 @@ module.exports = {
                     }
                 }
             },
-            {
-                test: /\.html$/,
-                loader: "raw-loader"
-            },
+            // {
+            //     test: /\.html$/,
+            //     loader: "raw-loader"
+            // },
             {
                 test: /\.css$/,
                 loader: 'style-loader!css-loader'
@@ -48,23 +48,23 @@ module.exports = {
             //         attrs: ['img:src']
             //     }
             // },
-            // {
-            //     test: /\.html$/,
-            //     loader:'html-loader'
-            // },
             {
                 test: /\.scss$/,
                 loader: 'style-loader!css-loader!sass-loader'
             },
             {
                 test: /\.(gif|jpg|png|woff|svg|eot|ttf)\??.*$/,
-                loader:'url-loader',
-                options:{
-                    limit:8192,
-                    name:'images/[name].[ext]'
+                loader: 'url-loader',
+                options: {
+                    limit: 8192,
+                    name: 'images/[name].[ext]'
                 },
                 //loader: 'url-loader?limit=8192&name=images/[hash:8].[name].[ext]'
-            }
+            },
+            {
+                test: /\.html$/,
+                loader: 'html-loader'
+            },
         ]
     },
     plugins: [
